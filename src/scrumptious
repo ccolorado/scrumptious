@@ -1,18 +1,45 @@
 #!/bin/bash
+#title            :scrumptious
+#description      :This script will launch $EDITOR with scrum notes
+#author           :bgw
+#date             :2015 Jan 29
+#usage            :bash scrumptious
+#notes            :requires python and python dependencies
+#==============================================================================
 
-source ~/.minute_log.cnf
+
+## Loading configurations
+scrumptious_config=~/.scrumptious.conf
+todays_date=$(date +%F)
+
+if [ -f "$scrumptious_config" ]; then
+  source $scrumptious_config
+fi;
 
 template_filename=${template_filename-$HOME/minutes/minute_template.md}
 minutes_directory=${minute_directory-$HOME/minutes}
+minute_epoch=${minute_epoch-$todays_date}
 jira_username=${jira_username-''}
 jira_password=${jira_password-''}
 jira_server=${jira_server-''}
 
+if [ ! -f "$scrumptious_config" ]; then
+  echo "Creating sample config file $scrumptious_config"
+echo "template_filename=$template_filename
+minutes_directory=$minute_directory
+jira_username=$jira_username
+jira_password=$jira_password
+jira_server=$jira_server
+logs_epoch=$minute_epoch
+" >> $scrumptious_config
+  echo "Epoch set at $(date +%F) files timestamped bofore will not be opened"
+fi
+
+
+exit 1
 previous_minute=""
 datestamp=""
 interval=$1
-
-
 
 if [[ $1 =~ ^[1-9]|[+-][1-9]* ]]; then
   datestamp=$(date +%F --date="$1 days")
