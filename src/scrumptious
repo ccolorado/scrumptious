@@ -1,0 +1,40 @@
+#!/bin/bash
+
+source ~/.minute_log.cnf
+
+template_filename=${template_filename-$HOME/minutes/minute_template.md}
+minutes_directory=${minute_directory-$HOME/minutes}
+jira_username=${jira_username-''}
+jira_password=${jira_password-''}
+jira_server=${jira_server-''}
+
+previous_minute=""
+datestamp=""
+interval=$1
+
+
+
+if [[ $1 =~ ^[1-9]|[+-][1-9]* ]]; then
+  datestamp=$(date +%F --date="$1 days")
+else
+  datestamp=$(date +%F)
+fi
+# If prevous weekday was friday skip three days back
+if [ "$(date +%a --date="$1 days")" == "Mon" ]; then
+  previous_minute=$(date +%F --date="-3 days")
+else
+  previous_minute=$(date +%F --date="-1 days")
+fi;
+
+previous_minute="$HOME/Dropbox/minutes/"$previous_minute"_minute.md"
+if [ ! -f "$previous_minute" ]; then
+  previous_minute=""
+fi;
+minute_file="$HOME/Dropbox/minutes/"$datestamp"_minute.md";
+if [ ! -f "$minute_file" ]; then 
+  cp ~/Dropbox/minutes/minute_template.md $minute_file;
+fi;
+
+echo "Loading issues $(date +%r)" > /tmp/jira_status.md
+#jira_issues.py -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md &
+vim -O $minute_file $previous_minute ~/Dropbox/minutes/minute_template.md  +botright\ sp\ /tmp/jira_status.md
