@@ -7,6 +7,9 @@
 #notes            :requires python and python dependencies
 #==============================================================================
 
+function minute_path_from_date {
+  build_filename=$minute_directory"/$1_minute.md";
+}
 
 ## Loading configurations
 scrumptious_config=~/.scrumptious.conf
@@ -26,17 +29,15 @@ jira_server=${jira_server-''}
 if [ ! -f "$scrumptious_config" ]; then
   echo "Creating sample config file $scrumptious_config"
 echo "template_filename=$template_filename
-minutes_directory=$minute_directory
+minute_directory=$minute_directory
 jira_username=$jira_username
 jira_password=$jira_password
 jira_server=$jira_server
-logs_epoch=$minute_epoch
+minute_epoch=$minute_epoch
 " >> $scrumptious_config
   echo "Epoch set at $(date +%F) files timestamped bofore will not be opened"
 fi
 
-
-exit 1
 previous_minute=""
 datestamp=""
 interval=$1
@@ -46,22 +47,26 @@ if [[ $1 =~ ^[1-9]|[+-][1-9]* ]]; then
 else
   datestamp=$(date +%F)
 fi
-# If prevous weekday was friday skip three days back
-if [ "$(date +%a --date="$1 days")" == "Mon" ]; then
-  previous_minute=$(date +%F --date="-3 days")
-else
-  previous_minute=$(date +%F --date="-1 days")
-fi;
 
-previous_minute="$HOME/Dropbox/minutes/"$previous_minute"_minute.md"
-if [ ! -f "$previous_minute" ]; then
-  previous_minute=""
-fi;
-minute_file="$HOME/Dropbox/minutes/"$datestamp"_minute.md";
+date_seeking=$(date -d "$datestamp -1 days" +%F);
+
+while [ "$date_seeking" != "$minute_epoch" ]; do
+  date_seeking=$(date -d "$date_seeking -1 days" +%F);
+  minute_path_from_date $date_seeking;
+  if [ -f $build_filename ]; then
+    echo $build_filename
+    previous_minute=$build_filename;
+    break;
+  fi;
+done
+
+minute_path_from_date $datestamp
+current_minute_file=$build_filename
+
 if [ ! -f "$minute_file" ]; then 
-  cp ~/Dropbox/minutes/minute_template.md $minute_file;
+  cp $emplate_filename $current_minute_file;
 fi;
 
 echo "Loading issues $(date +%r)" > /tmp/jira_status.md
 #jira_issues.py -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md &
-vim -O $minute_file $previous_minute ~/Dropbox/minutes/minute_template.md  +botright\ sp\ /tmp/jira_status.md
+vim -O $current_minute_file $previous_minute $template_filename +botright\ sp\ /tmp/jira_status.md
