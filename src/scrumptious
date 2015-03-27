@@ -1,7 +1,7 @@
 #!/bin/bash
 #title            :scrumptious
 #description      :This script will launch $EDITOR with scrum notes
-#author           :bgw
+#author           :ccolorado
 #date             :2015 Jan 29
 #usage            :bash scrumptious
 #notes            :requires python and python dependencies
@@ -63,10 +63,10 @@ done
 minute_path_from_date $datestamp
 current_minute_file=$build_filename
 
-if [ ! -f "$minute_file" ]; then 
-  cp $emplate_filename $current_minute_file;
+if [ ! -f "$current_minute_file" ]; then 
+  cp $template_filename $current_minute_file;
 fi;
 
 echo "Loading issues $(date +%r)" > /tmp/jira_status.md
-#jira_issues.py -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md &
+jira_issues -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md &
 vim -O $current_minute_file $previous_minute $template_filename +botright\ sp\ /tmp/jira_status.md
