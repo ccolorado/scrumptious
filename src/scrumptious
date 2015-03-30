@@ -22,13 +22,10 @@ fi;
 
 template_filename=${template_filename-$HOME/minutes/minute_template.md}
 minute_directory=${minute_directory-$HOME/minutes}
-minute_epoch=${minute_epoch-$todays_date}
+minute_epoch=${minute_epoch-$(date -d "$todays_date -1 days" +%F)}
 jira_username=${jira_username-''}
 jira_password=${jira_password-''}
 jira_server=${jira_server-''}
-
-#Set minute epoch to the previous date
-minute_epoch=$(date -d "$todays_date -1 days" +%F);
 
 if [ ! -f "$scrumptious_config" ]; then
   echo "Creating sample config file $scrumptious_config"
