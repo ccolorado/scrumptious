@@ -21,11 +21,14 @@ if [ -f "$scrumptious_config" ]; then
 fi;
 
 template_filename=${template_filename-$HOME/minutes/minute_template.md}
-minutes_directory=${minute_directory-$HOME/minutes}
+minute_directory=${minute_directory-$HOME/minutes}
 minute_epoch=${minute_epoch-$todays_date}
 jira_username=${jira_username-''}
 jira_password=${jira_password-''}
 jira_server=${jira_server-''}
+
+#Set minute epoch to the previous date
+minute_epoch=$(date -d "$todays_date -1 days" +%F);
 
 if [ ! -f "$scrumptious_config" ]; then
   echo "Creating sample config file $scrumptious_config"
@@ -36,7 +39,7 @@ jira_password=$jira_password
 jira_server=$jira_server
 minute_epoch=$minute_epoch
 " >> $scrumptious_config
-  echo "Epoch set at $(date +%F) files timestamped bofore will not be opened"
+  echo "Epoch set at $minute_epoch files timestamped bofore will not be opened"
 fi
 
 previous_minute=""
@@ -49,7 +52,7 @@ else
   datestamp=$(date +%F)
 fi
 
-date_seeking=$(date -d "$datestamp -1 days" +%F);
+date_seeking=$datestamp
 
 while [ "$date_seeking" != "$minute_epoch" ]; do
   date_seeking=$(date -d "$date_seeking -1 days" +%F);
@@ -69,7 +72,5 @@ if [ ! -f "$current_minute_file" ]; then
 fi;
 
 echo "Loading issues $(date +%r)" > /tmp/jira_status.md
-set -x
 `$SOURCE_DIR/jira_issues -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md`
-cat /tmp/jira_status.md
 vim -O $current_minute_file $previous_minute $template_filename +botright\ sp\ /tmp/jira_status.md
