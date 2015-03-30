@@ -42,6 +42,11 @@ minute_epoch=$minute_epoch
   echo "Epoch set at $minute_epoch files timestamped bofore will not be opened"
 fi
 
+if [ ! -f "$template_filename" ]; then
+  mkdir -p $(dirname "$template_filename")
+  cp "$SOURCE_DIR/minute_template.md" $template_filename
+fi
+
 previous_minute=""
 datestamp=""
 interval=$1
@@ -71,6 +76,11 @@ if [ ! -f "$current_minute_file" ]; then
   cp $template_filename $current_minute_file;
 fi;
 
-echo "Loading issues $(date +%r)" > /tmp/jira_status.md
-`$SOURCE_DIR/jira_issues -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md`
+if [ "x$jira_server" == "x" ]; then
+  echo "Please configure your jira settings on file $scrumptious_config" > /tmp/jira_status.md
+else
+  echo "Loading issues $(date +%r)" > /tmp/jira_status.md
+  `$SOURCE_DIR/jira_issues -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md`
+fi
+
 vim -O $current_minute_file $previous_minute $template_filename +botright\ sp\ /tmp/jira_status.md
