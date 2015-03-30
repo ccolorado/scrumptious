@@ -5,8 +5,20 @@ Scrumptious will open a vim instance with 4 splits in two rows
 # Dependencies
 
 * python2
-* [ jira ] https://pypi.python.org/pypi/jira)
+* [ jira ] (https://pypi.python.org/pypi/jira)
 * [ jinja2 ] (https://pypi.python.org/pypi/Jinja2)
+
+## Configuration
+Scrumptions reads its configuration from file `~/.scrumptious.config`
+
+```bash
+template_filename=    # FILE PATH the template for the new minutes
+minute_directory=     # DIRECTORY PATH where scrum minutes are stored
+jira_username=        # USERNAME for your jira password
+jira_password=        # PASSWORD for your jira account
+jira_server=          # URL of the jira server
+minute_epoch=         # DATE limit for backwards e.g.:2014-11-20
+```
 
 ## Splits
 Row 1
@@ -47,7 +59,6 @@ Open the second previous session view
 scrumptious -2
 ```
 
-
 ## Features
 
 * Facilitates preparation for your scrum meeting.
@@ -55,17 +66,5 @@ scrumptious -2
 * Lists active jira issues for the current user.
 * Pulls recent issues from jira
 
-## Configuration
-Scrumptions reads its configuration from file `~/.scrumptious.config`
-
-```bash
-template_filename=    # FILE PATH the template for the new minutes
-minute_directory=     # DIRECTORY PATH where scrum minutes are stored
-jira_username=        # USERNAME for your jira password
-jira_password=        # PASSWORD for your jira account
-jira_server=          # URL of the jira server
-minute_epoch=         # DATE limit for backwards e.g.:2014-11-20
-```
-## Usage
 ## Notes
 Script will be migrated to python entirely.
