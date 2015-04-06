@@ -2,6 +2,13 @@
 Dashboard view for scrum note taking.
 Scrumptious will open a vim instance with 4 splits in two rows
 
+## Features
+
+* Facilitates preparation for your scrum meeting.
+* Allows you to take notes during your scrum meeting
+* Lists active jira issues for the current user.
+* Pulls recent issues from jira
+
 # Dependencies
 
 * python2
@@ -58,13 +65,6 @@ Open the second previous session view
 ```bash
 scrumptious -2
 ```
-
-## Features
-
-* Facilitates preparation for your scrum meeting.
-* Allows you to take notes during your scrum meeting
-* Lists active jira issues for the current user.
-* Pulls recent issues from jira
 
 ## Notes
 Script will be migrated to python entirely.
