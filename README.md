@@ -9,6 +9,7 @@ Scrumptious will open a vim instance with 4 splits in two rows
 * Lists active jira issues for the current user.
 * Pulls recent issues from jira
 
+![scrumptious screenshot](https://raw.githubusercontent.com/ccolorado/scrumptious/master/assets/scrumptious_screenshot.png)
 # Dependencies
 
 * python2
