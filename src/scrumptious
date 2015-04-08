@@ -60,7 +60,6 @@ while [ "$date_seeking" != "$minute_epoch" ]; do
   date_seeking=$(date -d "$date_seeking -1 days" +%F);
   minute_path_from_date $date_seeking;
   if [ -f $build_filename ]; then
-    echo $build_filename
     previous_minute=$build_filename;
     break;
   fi;
@@ -76,7 +75,7 @@ fi;
 if [ "x$jira_server" == "x" ]; then
   echo "Please configure your jira settings on file $scrumptious_config" > /tmp/jira_status.md
 else
-  echo "Loading issues $(date +%r)" > /tmp/jira_status.md
+  echo "Loading Jira issues for $(date)"
   `$SOURCE_DIR/jira_issues -s $jira_server -u $jira_username -p $jira_password &> /tmp/jira_status.md`
 fi
 
