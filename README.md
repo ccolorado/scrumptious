@@ -1,5 +1,5 @@
 # Scrumptious
-Dashboard view for scrum note taking.
+Dashboard view for scrum note taking. With some Jira functionality
 Scrumptious will open a vim instance with 4 splits in two rows
 
 ## Features
