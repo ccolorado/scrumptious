@@ -1,5 +1,5 @@
 # Scrumptious
-Dashboard view for scrum note taking. With some Jira functionality
+Dashboard view for scrum note taking. With some Jira functionality.
 Scrumptious will open a vim instance with 4 splits in two rows
 
 ## Features
@@ -25,7 +25,7 @@ minute_directory=     # DIRECTORY PATH where scrum minutes are stored
 jira_username=        # USERNAME for your jira password
 jira_password=        # PASSWORD for your jira account
 jira_server=          # URL of the jira server
-minute_epoch=         # DATE limit for backwards e.g.:2014-11-20
+minute_epoch=         # DATE limit for backwards lookup e.g.:2014-11-20
 ```
 
 ## Splits
