@@ -11,6 +11,7 @@ import os.path
 import subprocess
 import tempfile
 import time
+import pprint
 
 
 CONF = None
@@ -34,10 +35,12 @@ def get_closed_issues(days_ago=14):
     qs = "assignee='%s' AND created >= '%s' AND status IN ('Closed')" % (CONF.user, since.strftime('%Y/%m/%d'))
     return JIRA_CTX.search_issues(qs)
 
-def get_my_active_issues(days_ago=14):
-    since = datetime.datetime.now() - datetime.timedelta(days=days_ago)
-    #qs = "assignee='%s' AND status IN ( 'Open', 'In Progress', 'Resolved') " % (CONF.user)
+def get_my_active_issues():
     qs = "assignee='%s' AND status NOT IN ( 'Closed', 'Withdrawn') " % (CONF.user)
+    return JIRA_CTX.search_issues(qs)
+
+def get_my_active_sprint_issues():
+    qs = "assignee='%s' AND status NOT IN ( 'Closed', 'Withdrawn') and sprint in openSprints()" % (CONF.user)
     return JIRA_CTX.search_issues(qs)
 
 def get_my_recent_issues(days_ago=14):
@@ -48,13 +51,25 @@ def get_my_recent_issues(days_ago=14):
 
 
 def create_template():
-    return jinja2.Template('''
-# All stories
-{% for story in my_active_issues -%}
+
+    active_sprint = jinja2.Template('''
+# Active Sprint
+
+{% for story in my_active_sprint_issues -%}
  * {{story.key}}  {{story.fields.status}} - {{story.fields.summary}}
+
+{% endfor %}
+''').render(my_active_sprint_issues=get_my_active_sprint_issues())
+
+    all_issues = jinja2.Template('''
+# All stories
+
+{% for story in my_active_issues -%}
+ * {{story.key}} <{{story.fields.priority}}> {{story.fields.status}} - {{story.fields.summary}}
 {% endfor %}
 
 ''').render(my_active_issues=get_my_active_issues())
+    return  active_sprint + all_issues
 
 
 def get_editor():
